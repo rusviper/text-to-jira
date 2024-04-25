@@ -39,7 +39,7 @@ dependencies {
 
     // jira client
     implementation("com.atlassian.jira:jira-rest-java-client-core:$jira_client_version")
-    implementation("com.atlassian.fugue:fugue:$jira_client_fugue_version")
+    implementation("io.atlassian.fugue:fugue:$jira_client_fugue_version")
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
