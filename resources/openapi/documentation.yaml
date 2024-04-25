@@ -1,0 +1,8 @@
+openapi: "3.0.3"
+info:
+  title: "text_to_jira API"
+  description: "text_to_jira API"
+  version: "1.0.0"
+servers:
+- url: "https://text_to_jira"
+paths: {}
