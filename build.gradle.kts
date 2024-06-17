@@ -8,6 +8,7 @@ val jira_client_fugue_version: String by project
 plugins {
     kotlin("jvm") version "1.9.23"
     id("io.ktor.plugin") version "2.3.10"
+    application
 }
 
 group = "ru.rusviper"
