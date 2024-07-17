@@ -22,7 +22,7 @@ class WorkLogTextParser(val projectPrefix: String = "IA-") {
     // 3) другое (всё остальное - на ретро, итоги ===, комментарии и пр.)
 
     /**  Формат строки записи в лог **/
-    private val matcherRowFormat = "(\\d\\.?\\d?) - (\\d+)\\s*: (.+)".toRegex()
+    private val matcherRowFormat = "(\\d\\.?\\d?)\\s+-\\s+(\\d+)\\s*: (.+)".toRegex()
 
     /**  Формат строки записи даты **/
     private val matcherDateFormat = "^(\\d{1,2}\\.\\d{1,2})([.[^:-]]+)\$".toRegex()
@@ -34,7 +34,7 @@ class WorkLogTextParser(val projectPrefix: String = "IA-") {
     private val matcherDate = "(^\\d{1,2}\\.\\d{1,2})".toRegex()
 
     /**  Выражение получения задачи **/
-    private val matcherIssue = "(?<=- )\\d+(?!\\d)".toRegex()
+    private val matcherIssue = "(?<=-\\s+)\\d+(?!\\d)".toRegex()
 
     /**  Выражение получения комментария **/
     private val matcherComment = "(?<=: ).+$".toRegex()

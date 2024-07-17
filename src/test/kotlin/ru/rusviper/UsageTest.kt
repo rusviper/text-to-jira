@@ -11,6 +11,7 @@ import ru.rusviper.plugins.configureTextToJira
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.LocalDateTime
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.asserter
@@ -22,9 +23,9 @@ class UsageTest {
         application {
             configureTextToJira()
         }
-        client.get("/text/show_issue").apply {
+        client.get("/text/ping").apply {
             assertEquals(HttpStatusCode.OK, status)
-            assertEquals("Hello World!", bodyAsText())
+            assertEquals("pong", bodyAsText())
         }
     }
 
@@ -42,9 +43,14 @@ class UsageTest {
         }
     }
 
-    //@Test
+    /**
+     * Тестово добавляет одну запись в лог
+     */
+    @Ignore
+    @Test
     fun testDoJira() = testApplication {
-        JiraClient("rvsuhih", "Heckfy", "https://jira.bfg-soft.ru/").apply {
+        val config = AppConfigReader.readConfig()
+        JiraClient(config.app.jira).apply {
             addWorkLog(WorkLogRow(
                 "IA-11618",
                 1.5,
@@ -54,27 +60,30 @@ class UsageTest {
         }
     }
 
-    //@Test
-    fun testWriteRow() = testApplication {
-        val rowValue = ""
-        val row = WorkLogTextParser().parseWorkLogString(rowValue, LocalDateTime.now())
-
-        JiraClient("rvsuhih", "Heckfy", "https://jira.bfg-soft.ru/").apply {
-            addWorkLog(row)
-        }
-    }
-
-    //@Test
+    /** Ручной способ использования приложения **/
+    @Ignore
+    @Test
     fun testWriteRows() = testApplication {
+
+        val confFile = "/home/rusviper/bfg/Projects/text-to-jira/application-local.conf"
         // read file
+        val config = AppConfigReader.readConfig(confFile)
+
+        // check right config
+        assertEquals("rvsuhih", config.app.jira.login)
+
+        // input data
         val path = "/home/rusviper/bfg/Projects/text-to-jira/inputLog.txt"
         val fileString = Files.readString(Paths.get(path))
 
         // parse file
         val parseDayWorkLogs = WorkLogTextParser().parseDayWorkLogs(fileString)
 
+        // check parsing
+        assertEquals(5, parseDayWorkLogs.size)
+
         // publish to jira
-        JiraClient("rvsuhih", "Heckfy", "https://jira.bfg-soft.ru/").apply {
+        JiraClient(config.app.jira).apply {
             addWorkLogs(parseDayWorkLogs)
         }
     }

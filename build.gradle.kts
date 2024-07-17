@@ -9,6 +9,7 @@ plugins {
     kotlin("jvm") version "1.9.23"
     id("io.ktor.plugin") version "2.3.10"
     application
+//    kotlin("plugin.serialization") version "2.0.0"
 }
 
 group = "ru.rusviper"
@@ -41,6 +42,11 @@ dependencies {
     // jira client
     implementation("com.atlassian.jira:jira-rest-java-client-core:$jira_client_version")
     implementation("io.atlassian.fugue:fugue:$jira_client_fugue_version")
+
+    // serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-hocon:1.7.1")
+
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")

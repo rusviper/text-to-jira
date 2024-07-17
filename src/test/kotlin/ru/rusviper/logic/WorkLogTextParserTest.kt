@@ -17,6 +17,9 @@ class WorkLogTextParserTest {
     private val exampleString5 = "2.05"
     private val exampleString6 = "на ретро: ура, всё хорошо"
     private val exampleString7 = "1.5 - мм+м"
+    private val exampleString8 = "1.5 -  11615: ответы"
+    private val exampleString9 = "1.5  -  11615: ответы"
+    private val exampleString10 = "1.5   -   11615: ответы"
 
     @Test
     fun parseDayWorkLogs() {
@@ -96,6 +99,14 @@ class WorkLogTextParserTest {
         } catch (e: Throwable) {
             assert(e is NoSuchElementException)
         }
+
+        val row8 = parser.parseWorkLogString(exampleString8, date)
+        checkRow(row8, "IA-11615", "ответы", 1.5)
+        val row9 = parser.parseWorkLogString(exampleString9, date)
+        checkRow(row9, "IA-11615", "ответы", 1.5)
+        val row10 = parser.parseWorkLogString(exampleString10, date)
+        checkRow(row10, "IA-11615", "ответы", 1.5)
+
     }
 
     private fun checkRow(row: WorkLogRow,

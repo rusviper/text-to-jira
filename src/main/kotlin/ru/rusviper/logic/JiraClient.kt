@@ -8,6 +8,7 @@ import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientF
 import io.atlassian.util.concurrent.Promise
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import ru.rusviper.data.JiraConfig
 import ru.rusviper.data.WorkLogRow
 import java.net.URI
 import java.time.LocalDateTime
@@ -21,6 +22,8 @@ import kotlin.math.ceil
 
 
 class JiraClient(val username: String, val password: String, val jiraUrl: String) {
+
+    constructor(jiraConfig: JiraConfig): this(jiraConfig.login, jiraConfig.password, jiraConfig.jiraUrl)
 
     private val restClient: JiraRestClient
 
