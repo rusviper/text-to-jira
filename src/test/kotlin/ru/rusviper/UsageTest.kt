@@ -65,7 +65,7 @@ class UsageTest {
     @Test
     fun testWriteRows() = testApplication {
 
-        val confFile = "/home/rusviper/bfg/Projects/text-to-jira/application-local.conf"
+        val confFile = Paths.get("/home/rusviper/bfg/Projects/text-to-jira/application-local.conf").toFile()
         // read file
         val config = AppConfigReader.readConfig(confFile)
 
@@ -80,7 +80,7 @@ class UsageTest {
         val parseDayWorkLogs = WorkLogTextParser().parseDayWorkLogs(fileString)
 
         // check parsing
-        assertEquals(5, parseDayWorkLogs.size)
+        assertEquals(33, parseDayWorkLogs.size)
 
         // publish to jira
         JiraClient(config.app.jira).apply {

@@ -46,6 +46,7 @@ dependencies {
     // serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-hocon:1.7.1")
+    implementation("io.github.config4k:config4k:0.7.0") // ConfigFactory
 
 
     testImplementation("io.ktor:ktor-server-tests-jvm")

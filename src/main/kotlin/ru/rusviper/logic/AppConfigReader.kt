@@ -3,8 +3,8 @@ import com.typesafe.config.ConfigFactory
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.hocon.Hocon
 import kotlinx.serialization.hocon.decodeFromConfig
-import kotlinx.serialization.hocon.encodeToConfig
 import ru.rusviper.data.AppConfig
+import java.io.File
 
 object AppConfigReader {
 
@@ -13,9 +13,12 @@ object AppConfigReader {
         return readConfig(config)
     }
 
-    fun readConfig(configFile: String): AppConfig {
-        val config = ConfigFactory.load(configFile)
-        return readConfig(config)
+    fun readConfig(configText: String): AppConfig {
+        return readConfig(ConfigFactory.parseString(configText))
+    }
+
+    fun readConfig(configFile: File): AppConfig {
+        return readConfig(ConfigFactory.parseFile(configFile))
     }
 
     @OptIn(ExperimentalSerializationApi::class)
