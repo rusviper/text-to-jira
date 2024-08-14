@@ -100,4 +100,22 @@ class JiraClient(val username: String, val password: String, val jiraUrl: String
             )}"
         }
     }
+
+    /**
+     * Retrieves the log records for a given issue.
+     *
+     * @param issue The ID or key of the issue.
+     * @return A list of WorkLogRow objects representing the log records for the issue.
+     */
+    fun getIssueLogRecords(issue: String): List<WorkLogRow> {
+        val jiraIssue = getIssue(issue)
+        return jiraIssue.worklogs.map {
+            WorkLogRow(
+                issue,
+                it.minutesSpent / 60.0,
+                it.comment,
+                yodaToTime(it.startDate).toLocalDateTime()
+            )
+        }
+    }
 }
