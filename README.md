@@ -5,9 +5,6 @@
 
 Пока возможно только тестовое использование с помощью: `UsageTest.testWriteRows`
 
-
-Запуск сервера (например): `gradle runFatJar`
-Конфигурация: [application.conf](text-to-jira-backend/src/main/resources/application.conf)
-Работает на JVM 21 (на 11 не работает)
-
 Дальнейшие работы: [Backlog](Backlog.md))
+
+Серверное приложение: [text-to-jira-backend](text-to-jira-backend/README.md)
