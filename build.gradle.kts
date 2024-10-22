@@ -46,6 +46,8 @@ dependencies {
     // serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-hocon:1.7.1")
+
+    // https://github.com/lightbend/config
     implementation("io.github.config4k:config4k:0.7.0") // ConfigFactory
 
 
