@@ -7,7 +7,7 @@
 
 
 Запуск сервера (например): `gradle runFatJar`
-Конфигурация: [application.conf](src/main/resources/application.conf)
+Конфигурация: [application.conf](text-to-jira-backend/src/main/resources/application.conf)
 Работает на JVM 21 (на 11 не работает)
 
 Дальнейшие работы: [Backlog](Backlog.md))
