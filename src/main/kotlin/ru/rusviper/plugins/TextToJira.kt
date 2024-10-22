@@ -10,6 +10,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import ru.rusviper.data.WorkLogRow
 import ru.rusviper.logic.JiraClient
+import ru.rusviper.logic.WorkLogTextParser
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 
 data class JiraIssue(val issue: String)
@@ -18,6 +21,14 @@ data class WorkLogRecords(
     /** Записи в лог **/
     val workLogRows: List<WorkLogRow>
 )
+
+data class WorkLogCheckInputParameters(val expectedCount: Int?, val worklogText: String?)
+data class WorkLogCheckResult(val rowsCount: Int)
+
+data class GetJiraStatusResult(val status: String,
+                               val ping: Long, val jiraLink: String,
+                               val serverInfo: String, val serverTitle: String)
+
 
 fun Application.configureTextToJira() {
     routing {
@@ -40,7 +51,42 @@ fun Application.configureTextToJira() {
             sendWorkLogRecords(workLogRecords)
             call.respond(HttpStatusCode.OK, "Written to Jira ${workLogRecords.workLogRows.size} log records")
         }
+
+        post("/text/check") {
+            // проверяем введённый текст лога
+            val workLog = call.receive<WorkLogCheckInputParameters>()
+            val logRecords = parseLogText(workLog.worklogText?:"")
+            call.respond(HttpStatusCode.OK, WorkLogCheckResult(logRecords.size))
+        }
+
+        get("/jira/check") {
+            // проверяем доступность жиры
+            val jiraStatus = pingJira()
+            call.respond(HttpStatusCode.OK, jiraStatus)
+        }
     }
+}
+
+fun pingJira(): GetJiraStatusResult {
+    // todo исключить повторное чтение конфигурации
+    val appConfig = AppConfigReader.readConfig()
+    val client = JiraClient(appConfig.app.jira)
+
+    val startDate = LocalDateTime.now()
+    val serverInfo = client.getServerInfo()
+    val endTime = LocalDateTime.now()
+
+    return GetJiraStatusResult(
+        status = "OK",
+        ping = ChronoUnit.MILLIS.between(startDate, endTime),
+        jiraLink = appConfig.app.jira.jiraUrl,
+        serverInfo = serverInfo.version,
+        serverTitle = serverInfo.serverTitle,
+    )
+}
+
+fun parseLogText(text: String): List<WorkLogRow> {
+    return WorkLogTextParser().parseDayWorkLogs(text)
 }
 
 fun getIssueLogRecords(issue: String): WorkLogRecords {

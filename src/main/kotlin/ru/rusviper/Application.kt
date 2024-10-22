@@ -9,6 +9,7 @@ fun main(args: Array<String>) {
 
 fun Application.module() {
     configureHTTP()
+    configureCORS()
     configureMonitoring()
     configureSerialization()
     configureAdministration()

@@ -6,7 +6,7 @@ val jira_client_fugue_version: String by project
 
 
 plugins {
-    kotlin("jvm") version "1.9.23"
+    kotlin("jvm") version "1.9.10"
     id("io.ktor.plugin") version "2.3.10"
     application
     kotlin("plugin.serialization") version "2.0.0"
@@ -51,4 +51,6 @@ dependencies {
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+
+    implementation("io.ktor:ktor-server-cors:$ktor_version")
 }

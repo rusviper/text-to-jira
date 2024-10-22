@@ -38,6 +38,11 @@ class JiraClient(val username: String, val password: String, val jiraUrl: String
 
     private fun getJiraUri() = URI.create(jiraUrl)
 
+    /**
+     * Возвращает информацию о сервере Jira
+     */
+    fun getServerInfo() = restClient.metadataClient.serverInfo.get()
+
     fun getIssue(issueId: String): Issue =
         restClient.issueClient.getIssue(issueId).get()
 
