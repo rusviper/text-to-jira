@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+
+  frontend:
+    container_name: text-to-jira-frontend
+    build: ./text-to-jira-frontend
+    ports:
+      - 8081:8081
+    stdin_open: true
+    environment:
+      - GENERATE_SOURCEMAP=true
+
+  backend:
+    container_name: text-to-jira-backend
+    build: ./text-to-jira-backend
+    ports:
+      - 8082:8082
+    stdin_open: true
+    environment:
+      - JIRA_USER=enterUser
+      - JIRA_PASSWORD=passw
+      - JIRA_URL=https://jira.bfg-soft.ru/

@@ -56,3 +56,18 @@ dependencies {
 
     implementation("io.ktor:ktor-server-cors:$ktor_version")
 }
+
+ktor {
+    docker {
+        jreVersion.set(JavaVersion.VERSION_21)
+        localImageName.set("text-to-jira-backend")
+        imageTag.set(version.toString())
+        portMappings.set(listOf(
+            io.ktor.plugin.features.DockerPortMapping(
+                8082,
+                8082,
+                io.ktor.plugin.features.DockerPortMappingProtocol.TCP
+            )
+        ))
+    }
+}
