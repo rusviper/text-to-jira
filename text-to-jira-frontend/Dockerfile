@@ -1,38 +1,39 @@
-# Stage 1: Cache Gradle dependencies
-FROM gradle:latest AS cache
+# Stage 0: Cache Gradle dependencies
+FROM gradle:jdk21 AS cache
 RUN mkdir -p /home/gradle/cache_home
 ENV GRADLE_USER_HOME /home/gradle/cache_home
+
 COPY build.gradle.* gradle.properties /home/gradle/app/
 WORKDIR /home/gradle/app
 RUN gradle clean build -i --stacktrace
 
-# Stage 2: Build Application
-FROM gradle:latest AS build
+# Этап 1: Сборка приложения
+FROM gradle:jdk21 AS build
 COPY --from=cache /home/gradle/cache_home /home/gradle/.gradle
 COPY . /usr/src/app/
 WORKDIR /usr/src/app
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
-# Build the fat JAR, Gradle also supports shadow
-# and boot JAR by default.
-# todo переключить на прод в далёком будущем
-#RUN gradle jsBrowserProductionWebpack --no-daemon
+
+# Копирование других необходимых модулей (если есть зависимости)
+# COPY text-to-jira-api ./text-to-jira-api
+
+# Сборка приложения
 RUN gradle jsBrowserDevelopmentWebpack --no-daemon
 
+# Этап 2: Настройка окружения для запуска
+FROM node:14-alpine
 
-# Stage 3: Create the Runtime Image
-FROM node:alpine AS runtime
-EXPOSE 8081:8081
-RUN mkdir /app
 WORKDIR /app
-#COPY ./ ./
-COPY --from=build /home/gradle/src/build/developmentExecutable/* /app
 
-RUN npm install
-ENTRYPOINT ["npm", "start"]
+# Копирование собранных файлов из этапа сборки
+COPY --from=build /home/gradle/src/build/distributions ./
 
-#WORKDIR /usr/app/front
-#EXPOSE 3000
-#COPY ./ ./
-#RUN npm install
-#CMD ["npm", "start"]
+# Установка http-server для обслуживания статических файлов
+RUN npm install -g http-server
+
+# Открытие порта
+EXPOSE 8081
+
+# Запуск сервера
+CMD ["http-server", "-p", "8081"]

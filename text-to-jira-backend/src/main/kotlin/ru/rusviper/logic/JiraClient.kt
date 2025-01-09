@@ -100,7 +100,7 @@ class JiraClient(val username: String, val password: String, val jiraUrl: String
                 .get(requestTimeoutMs, TimeUnit.MILLISECONDS)
         }
         logger.log(Level.INFO) {
-            "!@# Залогированы следующие записи: ${rows.sortedBy { it.date }.joinToString(
+            "!@# Залогированы следующие записи(${rows.size}): ${rows.sortedBy { it.date }.joinToString(
                 separator = "\n"
             )}"
         }

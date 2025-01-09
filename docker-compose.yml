@@ -18,6 +18,8 @@ services:
       - 8082:8082
     stdin_open: true
     environment:
-      - JIRA_USER=enterUser
-      - JIRA_PASSWORD=passw
+#      - JIRA_USER=enterUser
+      - JIRA_USER=rvsuhih
+#      - JIRA_PASSWORD=passw
+      - JIRA_PASSWORD=Heckfy
       - JIRA_URL=https://jira.bfg-soft.ru/
