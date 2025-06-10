@@ -14,5 +14,6 @@ fun Application.module() {
     configureSerialization()
     configureAdministration()
     configureRouting()
+
     configureTextToJira()
 }

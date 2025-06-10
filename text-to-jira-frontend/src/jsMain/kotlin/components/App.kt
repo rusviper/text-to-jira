@@ -3,7 +3,6 @@ package components
 import data.loadConfig
 import react.*
 import react.Props
-import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.h2
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.button
@@ -14,7 +13,9 @@ import react.useState
  */
 
 enum class AppMode {
-    Mode1, Mode2
+    ModeTestAlgorithm,
+
+    ModeJiraWorkLog
 }
 
 external interface AppProps : Props {
@@ -22,40 +23,40 @@ external interface AppProps : Props {
 }
 
 val App = FC<AppProps> { appProps ->
-    var activeMode by useState(AppMode.Mode2)
+    var activeMode by useState(AppMode.ModeJiraWorkLog)
 
     WelcomeHeader
 
     div {
         myButton {
-            text = "Режим 1"
+            text = "Добавить записи Jira Worklog"
             onClick = {
-                activeMode = AppMode.Mode1
+                activeMode = AppMode.ModeJiraWorkLog
             }
         }
         myButton {
-            text = "Режим 2"
+            text = "Тестовый режим"
             onClick = {
-                activeMode = AppMode.Mode2
+                activeMode = AppMode.ModeTestAlgorithm
             }
         }
+
     }
     div {
         when(activeMode) {
-            AppMode.Mode1 -> showMode1()
-            AppMode.Mode2 -> showMode2()
+            AppMode.ModeTestAlgorithm -> showModeTestAlgorithm()
+            AppMode.ModeJiraWorkLog -> showModeJiraWorklog()
         }
     }
 }
 
 
-fun ChildrenBuilder.showMode2() {
+fun ChildrenBuilder.showModeJiraWorklog() {
     val config = loadConfig()
-    JiraEnterWorklogForm {
-        defaultParameters = null    // отображаются плейсхолдеры
-        appConfig = config
-    }
+    // проверяем доступность жиры с заданными параметрами пользователя
     div {
+        // todo добавить параметры пользователя для подключения (заполнять из конфигурации)
+
         h2 {
             + "Статус соединения с Jira"
         }
@@ -63,10 +64,16 @@ fun ChildrenBuilder.showMode2() {
             appConfig = config
         }
     }
+    // форма ввода Jira Worklog
+    JiraEnterWorklogForm {
+        defaultParameters = null    // отображаются плейсхолдеры
+        appConfig = config
+    }
+
 }
 
 // по документации не желательно использовать ChildrenBuilder таким образом
-fun ChildrenBuilder.showMode1() {
+fun ChildrenBuilder.showModeTestAlgorithm() {
     div {
         WelcomeComponent()
     }

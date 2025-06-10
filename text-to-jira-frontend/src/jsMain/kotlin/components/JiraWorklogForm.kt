@@ -50,8 +50,10 @@ val JiraEnterWorklogForm = FC<FormParametersProps>("InputParametersForm") { root
     var inputParamsUpdated by useState(false)
     var lastUpdateTime by useState(null as Date?)
 
+    // отслеживаем нужное изменение параметра, которое будет говорить о необходимости перезапроса
     useEffect(inputParamsUpdated) {
         // если обновлено - это вводятся значения
+        // todo нужно ли проверять, выполняется ли запрос в данный момент?
         if (inputParamsUpdated)
             return@useEffect
 
@@ -120,40 +122,40 @@ val ParametersInputs = FC<InputParametersProps> { props ->
     div {
         css {
             // на всю ширину экрана
+            width = 100.pct
+            // для размещения двух полей ввода рядом друг с другом
+            display = Display.flex
+            justifyContent = JustifyContent.spaceBetween
         }
 
         div {
             css {
-                display = Display.flex
+                margin = 20.px
+                flexBasis = 30.pct
             }
 
-            div {
-                css {
-                    margin = 20.px
-                }
-                // справа ввод параметра
-
-                InputField {
-                    name = "Введите ожидаемое количество записей"
-                    placeholder = "Например, 10"
-                    defaultValue = props.defaultParameters?.expectedCount?.toString()
-                    onChange = {
-                        props.onChangeExpectedCount.invoke(it.toInt())
-                    }
+            // справа ввод параметра
+            InputField {
+                name = "Введите ожидаемое количество записей"
+                placeholder = "Например, 10"
+                defaultValue = props.defaultParameters?.expectedCount?.toString()
+                onChange = {
+                    props.onChangeExpectedCount.invoke(it.toInt())
                 }
             }
-            div {
-                css {
-                    margin = 20.px
-                }
-                // слева ввод ворклога
-                MultiLineInputField {
-                    name = "Введите текст ворклога"
-                    placeholder = "Например, \n1 - 10123: писал тесты"
-                    defaultValue = props.defaultParameters?.worklogText
-                    onChange = {
-                        props.onChangeWorklogText.invoke(it)
-                    }
+        }
+        div {
+            css {
+                margin = 20.px
+                flexBasis = 65.pct
+            }
+            // слева ввод ворклога
+            MultiLineInputField {
+                name = "Введите текст ворклога"
+                placeholder = "Например, \n1 - 10123: писал тесты"
+                defaultValue = props.defaultParameters?.worklogText
+                onChange = {
+                    props.onChangeWorklogText.invoke(it)
                 }
             }
         }
