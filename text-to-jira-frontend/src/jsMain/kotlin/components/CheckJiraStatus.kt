@@ -41,8 +41,11 @@ val CheckJiraStatus = FC<CheckJiraStatusProps>("CheckJiraStatus") { props ->
     useEffect(needRecheck) {
         if (!needRecheck || requestInProgress) {
             Logger.debug("useEffect: CheckJiraStatus SKIP request")
+
             return@useEffect
         }
+
+        
 
         requestInProgress = true
         Logger.debug("useEffect: CheckJiraStatus request")
