@@ -5,7 +5,7 @@ ENV GRADLE_USER_HOME /home/gradle/cache_home
 
 COPY build.gradle.* gradle.properties /home/gradle/app/
 WORKDIR /home/gradle/app
-RUN gradle clean build -i --stacktrace
+#RUN gradle clean build -i --stacktrace
 
 # Этап 1: Сборка приложения
 FROM gradle:jdk21 AS build
@@ -19,7 +19,7 @@ WORKDIR /home/gradle/src
 # COPY text-to-jira-api ./text-to-jira-api
 
 # Сборка приложения
-RUN gradle jsBrowserDevelopmentWebpack --no-daemon
+RUN gradle jsBrowserDistribution --no-daemon
 
 # Этап 2: Настройка окружения для запуска
 FROM node:14-alpine

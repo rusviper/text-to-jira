@@ -4,18 +4,20 @@ import api.OutputError
 import tools.makeRequestWithData
 import data.AppConfig
 import csstype.*
+import dom.html.HTMLInputElement
 import emotion.react.css
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import mui.material.CircularProgress
-import react.FC
-import react.Props
+import mui.material.*
+import mui.material.styles.TypographyVariant
+import react.*
+import react.dom.events.ChangeEvent
+import react.dom.events.FormEvent
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.h1
-import react.useEffect
-import react.useState
+import react.dom.onChange
 import tools.Logger
 import tools.readJson
 import kotlin.js.Date
@@ -78,38 +80,47 @@ val JiraEnterWorklogForm = FC<FormParametersProps>("InputParametersForm") { root
         }
     }
 
-    ParametersInputs {
-        defaultParameters = inputParameters
-        onChangeExpectedCount = {
-            inputParameters = inputParameters.copy(expectedCount = it)
-            inputParamsUpdated = true
-            Logger.debug("onChangeExpectedCount: inputParameters=${inputParameters}, expectedCount=${it}")
+
+    Box {
+        css {
+            padding = 20.px
+            display = Display.flex
+            flexDirection = FlexDirection.column
+            alignItems = AlignItems.center
         }
-        onChangeWorklogText = {
-            inputParameters = inputParameters.copy(worklogText = it)    // выполняет setState, но не присвоение?
-            inputParamsUpdated = true
-            Logger.debug("onChangeWorklogText: inputParameters=${inputParameters}, text=${it}")
+
+        ParametersInputs {
+            defaultParameters = inputParameters
+            onChangeExpectedCount = {
+                inputParameters = inputParameters.copy(expectedCount = it)
+                inputParamsUpdated = true
+                Logger.debug("onChangeExpectedCount: inputParameters=${inputParameters}, expectedCount=${it}")
+            }
+            onChangeWorklogText = {
+                inputParameters = inputParameters.copy(worklogText = it)    // выполняет setState, но не присвоение?
+                inputParamsUpdated = true
+                Logger.debug("onChangeWorklogText: inputParameters=${inputParameters}, text=${it}")
+            }
+        }
+
+        QueryButtons {
+            parameters = inputParameters
+            appConfig = rootProps.appConfig
+            onCheck = {
+                inputParamsUpdated = false
+            }
+            onSubmit = {
+                inputParamsUpdated = false
+            }
+        }
+
+        ResultFields {
+            this.queryActive = queryActive
+            this.outputParameters = outputParameters
+            this.errorParameters = errorParameters
+            this.lastUpdateTime = lastUpdateTime
         }
     }
-
-    QueryButtons {
-        parameters = inputParameters
-        appConfig = rootProps.appConfig
-        onCheck = {
-            inputParamsUpdated = false
-        }
-        onSubmit = {
-            inputParamsUpdated = false
-        }
-    }
-
-   ResultFields {
-       this.queryActive = queryActive
-       this.outputParameters = outputParameters
-       this.errorParameters = errorParameters
-       this.lastUpdateTime = lastUpdateTime
-   }
-
 }
 
 external interface InputParametersProps : Props {
@@ -118,8 +129,19 @@ external interface InputParametersProps : Props {
     var onChangeWorklogText: (String) -> Unit
 }
 
+external interface TextFieldLabelProps : Props {
+    var text: String
+}
+
+val TextFieldLabel = FC<TextFieldLabelProps> { props ->
+    Typography {
+        variant = TypographyVariant.body1
+        + props.text
+    }
+}
+
 val ParametersInputs = FC<InputParametersProps> { props ->
-    div {
+    Box {
         css {
             // на всю ширину экрана
             width = 100.pct
@@ -128,34 +150,44 @@ val ParametersInputs = FC<InputParametersProps> { props ->
             justifyContent = JustifyContent.spaceBetween
         }
 
-        div {
+        Box {
             css {
                 margin = 20.px
                 flexBasis = 30.pct
             }
 
             // справа ввод параметра
-            InputField {
-                name = "Введите ожидаемое количество записей"
+            TextField {
+                label = TextFieldLabel.create {
+                    text = "Введите ожидаемое количество записей"
+                }
                 placeholder = "Например, 10"
                 defaultValue = props.defaultParameters?.expectedCount?.toString()
-                onChange = {
-                    props.onChangeExpectedCount.invoke(it.toInt())
+                onChange = { event ->
+                    val inputText = (event as ChangeEvent<HTMLInputElement>).target.value
+                    // Проверяем, что введено число, чтобы избежать исключений
+                    val newCount = inputText.toIntOrNull() ?: 0
+                    props.onChangeExpectedCount.invoke(newCount)
                 }
             }
         }
-        div {
+        Box {
             css {
                 margin = 20.px
                 flexBasis = 65.pct
             }
             // слева ввод ворклога
-            MultiLineInputField {
-                name = "Введите текст ворклога"
+            TextField {
+                label = TextFieldLabel.create {
+                    text = "Введите текст ворклога"
+                }
                 placeholder = "Например, \n1 - 10123: писал тесты"
                 defaultValue = props.defaultParameters?.worklogText
+                multiline = true
+                rows = 4
                 onChange = {
-                    props.onChangeWorklogText.invoke(it)
+                    val event = (it as ChangeEvent<HTMLInputElement>)
+                    props.onChangeWorklogText.invoke(event.target.value)
                 }
             }
         }
@@ -171,36 +203,28 @@ external interface QueryParametersProps : Props {
 
 val QueryButtons = FC<QueryParametersProps> { props ->
 
-    div {
+    Box {
         css {
             // на всю ширину экрана
             margin = 20.px
             display = Display.flex
         }
 
-        div {
-            css {
-                marginLeft = 50.px
-            }
-            // справа кнопка "проверить"
-            myButton {
-                text = "Проверить"
-                onClick = {
-                    props.onCheck()
-                }
-
+        Button {
+            variant = ButtonVariant.contained
+            color = ButtonColor.primary
+            +"Проверить"
+            onClick = {
+                props.onCheck()
             }
         }
-        div {
-            css {
-                marginLeft = 50.px
-            }
-            // слева кнопка "отправить"
-            myButton {
-                text = "Отправить"
-                onClick = {
-                    props.onSubmit()
-                }
+
+        Button {
+            variant = ButtonVariant.contained
+            color = ButtonColor.secondary
+            +"Отправить"
+            onClick = {
+                props.onSubmit()
             }
         }
     }
@@ -215,15 +239,19 @@ external interface ResultFieldsProps : Props {
 
 val ResultFields = FC<ResultFieldsProps> { props ->
 
-    div {
+    Box {
         css {
-            // на всю ширину экрана
+            padding = 20.px
+            display = Display.flex
+            flexDirection = FlexDirection.column
+            alignItems = AlignItems.center
         }
-        h1 {
-            + "Результаты расчета:"
+        Typography {
+            variant = TypographyVariant.h1
+            +"Результаты расчета:"
         }
         if (props.errorParameters != null) {
-            div {
+            Box {
                 css {
                     color = NamedColor.red
                 }
@@ -235,7 +263,10 @@ val ResultFields = FC<ResultFieldsProps> { props ->
                 }
             }
         }
-        div {
+        Box {
+            css {
+                marginTop = 20.px
+            }
             // список параметров с результатами
             p {
                 val resultsString = if (props.outputParameters == null)
@@ -246,7 +277,10 @@ val ResultFields = FC<ResultFieldsProps> { props ->
             }
         }
         if (props.queryActive) {
-            div {
+            Box {
+                css {
+                    marginTop = 20.px
+                }
                 // невидимый спиннер
                 CircularProgress {
                     //variant = CircularProgressVariant.determinate

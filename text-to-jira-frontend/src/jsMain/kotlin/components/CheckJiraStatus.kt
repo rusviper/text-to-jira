@@ -1,6 +1,9 @@
 package components
 
 import api.OutputError
+import csstype.AlignItems
+import csstype.Display
+import csstype.FlexDirection
 import csstype.px
 import data.AppConfig
 import emotion.react.css
@@ -45,7 +48,7 @@ val CheckJiraStatus = FC<CheckJiraStatusProps>("CheckJiraStatus") { props ->
             return@useEffect
         }
 
-        
+
 
         requestInProgress = true
         Logger.debug("useEffect: CheckJiraStatus request")
@@ -68,55 +71,67 @@ val CheckJiraStatus = FC<CheckJiraStatusProps>("CheckJiraStatus") { props ->
         }
     }
 
-    Button {
-        onClick = {
-            needRecheck = true
+    Box {
+        css {
+            padding = 20.px
+            display = Display.flex
+            flexDirection = FlexDirection.column
+            alignItems = AlignItems.center
         }
 
-        +"Проверить соединение с Jira"
-    }
+        Button {
+            variant = ButtonVariant.contained
+            color = ButtonColor.primary
 
-    if(requestInProgress) {
-        CircularProgress {
-            css {
-                marginLeft = 10.px
+            +"Проверить соединение с Jira"
+
+            onClick = {
+                needRecheck = true
             }
         }
-    }
 
-    if (jiraStatusResult != null) {
-        p {
-            + "Ссылка: ${jiraStatusResult!!.jiraLink}"
-        }
-
-        p {
-            + "Сервер: ${jiraStatusResult!!.serverTitle} (${jiraStatusResult!!.serverInfo})"
-        }
-
-        p {
-            + "Пинг: ${jiraStatusResult!!.ping}ms"
-        }
-    }
-
-
-    if (jiraStatusResult == null) {
-        Alert {
-            css {
-                marginTop = 10.px
+        if (requestInProgress) {
+            CircularProgress {
+                css {
+                    marginLeft = 10.px
+                }
             }
-            severity = AlertColor.error
-            + "Проблема соединения с сервером приложения (не Jira)"
         }
-    } else {
-        if (jiraStatusResult!!.status == "OK") {
+
+        if (jiraStatusResult != null) {
+            p {
+                +"Ссылка: ${jiraStatusResult!!.jiraLink}"
+            }
+
+            p {
+                +"Сервер: ${jiraStatusResult!!.serverTitle} (${jiraStatusResult!!.serverInfo})"
+            }
+
+            p {
+                +"Пинг: ${jiraStatusResult!!.ping}ms"
+            }
+        }
+
+
+        if (jiraStatusResult == null) {
             Alert {
-                severity = AlertColor.success
-                + "Соединение с Jira успешно установлено"
+                css {
+                    marginTop = 10.px
+                }
+                severity = AlertColor.error
+                +"Проблема соединения с сервером приложения (не Jira)"
             }
         } else {
-            Alert {
-                severity = AlertColor.warning
-                + "Соединение с Jira не установлено"
+            if (jiraStatusResult!!.status == "OK") {
+                Alert {
+                    severity = AlertColor.success
+                    +"Соединение с Jira успешно установлено"
+                }
+            } else {
+                Alert {
+                    severity = AlertColor.warning
+                    +"Соединение с Jira не установлено"
+                }
             }
         }
     }

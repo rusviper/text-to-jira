@@ -5,6 +5,9 @@ import csstype.NamedColor
 import csstype.pct
 import csstype.px
 import emotion.react.css
+import mui.material.Box
+import mui.material.Typography
+import mui.material.styles.TypographyVariant
 import react.FC
 import react.Props
 import react.dom.html.ReactHTML.div
@@ -16,17 +19,16 @@ import kotlin.js.Date
 
 val WelcomeHeader = FC<Props>("WelcomeHeader") {
 
-    div {
+    Box {
         css {
             width = 20.px
             height = 20.px
             borderRadius = 50.pct
-        }
-    }
-    h1 {
-        css {
             alignContent = AlignContent.center
         }
+    }
+    Typography {
+        variant = TypographyVariant.h1
         + getWelcomeString(Date())
     }
 }

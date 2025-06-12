@@ -1,6 +1,10 @@
 package components
 
+import csstype.*
+import emotion.react.css
 import data.loadConfig
+import mui.material.*
+import mui.material.styles.TypographyVariant
 import react.*
 import react.Props
 import react.dom.html.ReactHTML.h2
@@ -25,27 +29,24 @@ external interface AppProps : Props {
 val App = FC<AppProps> { appProps ->
     var activeMode by useState(AppMode.ModeJiraWorkLog)
 
-    WelcomeHeader
+    Box {
 
-    div {
-        myButton {
-            text = "Добавить записи Jira Worklog"
-            onClick = {
-                activeMode = AppMode.ModeJiraWorkLog
-            }
-        }
-        myButton {
-            text = "Тестовый режим"
-            onClick = {
-                activeMode = AppMode.ModeTestAlgorithm
-            }
+        css {
+            padding = 20.px
         }
 
-    }
-    div {
-        when(activeMode) {
-            AppMode.ModeTestAlgorithm -> showModeTestAlgorithm()
-            AppMode.ModeJiraWorkLog -> showModeJiraWorklog()
+        Sidebar {
+            onModeChange = { newMode ->
+                activeMode = newMode
+            }
+            selectedAppMode = activeMode
+        }
+
+        Box {
+            when (activeMode) {
+                AppMode.ModeTestAlgorithm -> showModeTestAlgorithm()
+                AppMode.ModeJiraWorkLog -> showModeJiraWorklog()
+            }
         }
     }
 }
@@ -54,35 +55,53 @@ val App = FC<AppProps> { appProps ->
 fun ChildrenBuilder.showModeJiraWorklog() {
     val config = loadConfig()
     // проверяем доступность жиры с заданными параметрами пользователя
-    div {
+    Box {
+        css {
+            padding = 20.px
+            display = Display.flex
+            flexDirection = FlexDirection.column
+            alignItems = AlignItems.center
+        }
+
         // todo добавить параметры пользователя для подключения (заполнять из конфигурации)
 
-        h2 {
-            + "Статус соединения с Jira"
+        Typography {
+            variant = TypographyVariant.h2
+            +"Статус соединения с Jira"
         }
+
         CheckJiraStatus {
             appConfig = config
         }
+        // форма ввода Jira Worklog
+        JiraEnterWorklogForm {
+            defaultParameters = null    // отображаются плейсхолдеры
+            appConfig = config
+        }
     }
-    // форма ввода Jira Worklog
-    JiraEnterWorklogForm {
-        defaultParameters = null    // отображаются плейсхолдеры
-        appConfig = config
-    }
-
 }
 
 // по документации не желательно использовать ChildrenBuilder таким образом
 fun ChildrenBuilder.showModeTestAlgorithm() {
-    div {
+    Box {
+        css {
+            padding = 20.px
+            display = Display.flex
+            flexDirection = FlexDirection.column
+            alignItems = AlignItems.center
+        }
+
         WelcomeComponent()
-    }
-    div {
+
         InputParametersForm {
             defaultValue = 6.0
             name = "d"
         }
-        div {
+
+        Box {
+            css {
+                marginTop = 20.px
+            }
             counter()
         }
     }
@@ -91,7 +110,10 @@ fun ChildrenBuilder.showModeTestAlgorithm() {
 
 val counter = FC<Props> {
     var count by useState(0)
-    button {
+
+    Button {
+        variant = ButtonVariant.contained
+        color = ButtonColor.primary
         onClick = { count += 1 }
         +count.toString()
     }
