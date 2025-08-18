@@ -23,7 +23,11 @@ import kotlin.math.ceil
 
 class JiraClient(val username: String, val password: String, val jiraUrl: String) {
 
-    constructor(jiraConfig: JiraConfig): this(jiraConfig.login, jiraConfig.password, jiraConfig.jiraUrl)
+    constructor(jiraConfig: JiraConfig): this(
+        jiraConfig.login ?: throw IllegalArgumentException("Jira login is required"),
+        jiraConfig.password ?: throw IllegalArgumentException("Jira password is required"),
+        jiraConfig.jiraUrl ?: throw IllegalArgumentException("Jira URL is required")
+    )
 
     private val restClient: JiraRestClient
 

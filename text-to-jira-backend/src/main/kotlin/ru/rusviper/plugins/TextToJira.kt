@@ -79,7 +79,7 @@ fun pingJira(): GetJiraStatusResult {
     return GetJiraStatusResult(
         status = "OK",
         ping = ChronoUnit.MILLIS.between(startDate, endTime),
-        jiraLink = appConfig.app.jira.jiraUrl,
+        jiraLink = appConfig.app.jira.jiraUrl!!,
         serverInfo = serverInfo.version,
         serverTitle = serverInfo.serverTitle,
     )

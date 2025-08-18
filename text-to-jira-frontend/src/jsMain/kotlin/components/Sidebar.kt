@@ -11,9 +11,12 @@ import react.dom.aria.ariaLabel
 external interface SidebarProps : Props {
     var onModeChange: (AppMode) -> Unit
     var selectedAppMode: AppMode
+    var isOpen: Boolean
 }
 
 val Sidebar = FC<SidebarProps>("Sidebar") { props ->
+
+    // todo нужно научиться управлять состоянием снаружи через пропс (из App)
     val (isSidebarOpen, setOpen) = useState(false)
 
     val toggleDrawer = { newOpen: Boolean ->
@@ -25,30 +28,8 @@ val Sidebar = FC<SidebarProps>("Sidebar") { props ->
             backgroundColor = NamedColor.lightblue
         }
 
-        Button {
-            onClick = { toggleDrawer(true) }
-            + "Open Drawer"
-        }
-
-        AppBar {
-            position = AppBarPosition.fixed
-            Toolbar {
-                IconButton {
-                    //ariaLabel = "open drawer"
-                    edge = IconButtonEdge.start
-                    onClick = { toggleDrawer(!isSidebarOpen) }
-                    + "Меню"
-                }
-
-                Typography {
-                    variant = TypographyVariant.h6
-
-                    + if (props.selectedAppMode == AppMode.ModeJiraWorkLog) "Jira Worklog" else "Test Algorithm"
-                }
-            }
-        }
-        
         Drawer {
+
             variant = DrawerVariant.temporary
             open = isSidebarOpen
             onClose = { _,_ -> toggleDrawer(false) }
@@ -57,6 +38,31 @@ val Sidebar = FC<SidebarProps>("Sidebar") { props ->
                     width = 250.px
                 }
             }
+
+            Box {
+//                AppBar {
+//                    position = AppBarPosition.fixed
+//                    css {
+//                        width = 250.px
+//                        height = 64.px
+//                        display = Display.flex
+//                        alignItems = AlignItems.center
+//                        justifyContent = JustifyContent.center
+//                        backgroundColor = NamedColor.blue
+//                    }
+//                    Toolbar {
+//                        Typography {
+//                            variant = TypographyVariant.h6
+//                            + "Боковое меню"
+//                            css {
+//                                color = NamedColor.white
+//                            }
+//                        }
+//                    }
+//                }
+            }
+            Divider
+
             List {
                 ListItem {
                     Button {

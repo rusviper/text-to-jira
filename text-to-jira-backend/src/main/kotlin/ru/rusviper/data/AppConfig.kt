@@ -6,10 +6,17 @@ import kotlinx.serialization.Serializable
 data class AppConfig(val app: AppRootConfig)
 
 @Serializable
-data class AppRootConfig(val jira: JiraConfig, val job: JobConfig)
+data class AppRootConfig(
+    val jira: JiraConfig,
+    val job: JobConfig
+)
 
 @Serializable
 data class JobConfig(val inputFile: String)
 
 @Serializable
-data class JiraConfig(val login: String, val password: String, val jiraUrl: String)
+data class JiraConfig(
+    val login: String? = null,
+    val password: String? = null,
+    val jiraUrl: String? = null
+)

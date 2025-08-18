@@ -28,11 +28,36 @@ external interface AppProps : Props {
 
 val App = FC<AppProps> { appProps ->
     var activeMode by useState(AppMode.ModeJiraWorkLog)
+    var isSidebarOpen by useState(false)
 
+    val toggleSidebar = { newOpen: Boolean ->
+        isSidebarOpen = newOpen
+    }
     Box {
 
         css {
             padding = 20.px
+        }
+
+        AppBar {
+            position = AppBarPosition.fixed
+            Toolbar {
+                IconButton {
+                    //ariaLabel = "open drawer"
+                    edge = IconButtonEdge.start
+                    onClick = { toggleSidebar(!isSidebarOpen) }
+                    //+ "Меню"
+                    Icon {
+                        + "menu"
+                    }
+                }
+
+                Typography {
+                    variant = TypographyVariant.h6
+
+                    + if (activeMode == AppMode.ModeJiraWorkLog) "Jira Worklog" else "Test Algorithm"
+                }
+            }
         }
 
         Sidebar {
@@ -40,6 +65,7 @@ val App = FC<AppProps> { appProps ->
                 activeMode = newMode
             }
             selectedAppMode = activeMode
+            isOpen = isSidebarOpen
         }
 
         Box {

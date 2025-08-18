@@ -80,7 +80,7 @@ class UsageTest {
         val parseDayWorkLogs = WorkLogTextParser().parseDayWorkLogs(fileString)
 
         // check parsing
-        assertEquals(183, parseDayWorkLogs.size)
+        assertEquals(328, parseDayWorkLogs.size)
 
         // publish to jira
         JiraClient(config.app.jira).apply {

@@ -50,11 +50,14 @@ dependencies {
     // https://github.com/lightbend/config
     implementation("io.github.config4k:config4k:0.7.0") // ConfigFactory
 
-
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
     implementation("io.ktor:ktor-server-cors:$ktor_version")
+
+    // logging
+    implementation("io.github.oshai:kotlin-logging-jvm:7.0.3")
+    implementation("org.apache.logging.log4j:log4j-core:2.9.1")
 }
 
 ktor {
