@@ -1,3 +1,6 @@
+import ru.rusviper.gradle.Dependencies
+import ru.rusviper.gradle.Versions
+
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -41,7 +44,20 @@ dependencies {
 
     // jira client
     implementation("com.atlassian.jira:jira-rest-java-client-core:$jira_client_version")
-    implementation("io.atlassian.fugue:fugue:$jira_client_fugue_version")
+    implementation("io.ktor:ktor-client-logging:3.2.3")
+    compileOnly("com.atlassian.fugue:fugue:$jira_client_fugue_version")
+
+    // ktor clent
+    implementation(Dependencies.ktorClientCore)
+    implementation(Dependencies.ktorClientCIO)
+    implementation(Dependencies.ktorClientContent)
+    implementation("io.ktor:ktor-client-auth:2.3.7")
+    implementation(Dependencies.ktorKotlinxSerialization)
+    implementation(Dependencies.ktorKoin)
+    implementation(Dependencies.ktorKoinSlf4j)
+    implementation("org.json:json:20231013")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    implementation("io.ktor:ktor-client-logging:2.3.5")
 
     // serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.1")

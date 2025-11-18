@@ -7,7 +7,6 @@ import com.atlassian.jira.rest.client.api.domain.input.WorklogInputBuilder
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory
 import io.atlassian.util.concurrent.Promise
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import ru.rusviper.data.JiraConfig
 import ru.rusviper.data.WorkLogRow
 import java.net.URI
@@ -76,12 +75,12 @@ class JiraClient(val username: String, val password: String, val jiraUrl: String
         return addWorkLog(issue, wlRow.comment, date, wlRow.durationHours)
     }
 
-    private fun timeToYoda(time: LocalDateTime): DateTime {
+    fun timeToYoda(time: LocalDateTime): DateTime {
         return DateTime(time.year, time.monthValue, time.dayOfMonth,
             time.hour, time.minute, time.second, time.nano / 1000000)
     }
 
-    private fun yodaToTime(time: DateTime): ZonedDateTime {
+    fun yodaToTime(time: DateTime): ZonedDateTime {
         return ZonedDateTime.ofLocal(
             LocalDateTime.of(
                 time.year,
