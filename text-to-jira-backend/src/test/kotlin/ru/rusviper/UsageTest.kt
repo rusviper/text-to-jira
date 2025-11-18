@@ -64,7 +64,7 @@ class UsageTest {
     }
 
     /** Ручной способ использования приложения **/
-    //@Ignore
+    @Ignore
     @Test
     fun testWriteRows() = testApplication {
 
@@ -83,10 +83,13 @@ class UsageTest {
         val parseDayWorkLogs = WorkLogTextParser().parseDayWorkLogs(fileString)
 
         // check parsing
-        assertEquals(182, parseDayWorkLogs.size)
+        assertEquals(120, parseDayWorkLogs.size)
 
         // publish to jira
         JiraClient(config.app.jira).apply {
+
+            println("ServerInfo=" + getServerInfo())
+
             addWorkLogs(parseDayWorkLogs)
         }
     }

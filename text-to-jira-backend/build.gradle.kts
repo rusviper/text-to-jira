@@ -9,8 +9,8 @@ val jira_client_fugue_version: String by project
 
 
 plugins {
-    kotlin("jvm") version "1.9.10"
-    id("io.ktor.plugin") version "2.3.10"
+    kotlin("jvm") version "1.9.23"
+    id("io.ktor.plugin") version "3.2.3"
     application
     kotlin("plugin.serialization") version "2.0.0"
 }
@@ -34,30 +34,34 @@ repositories {
 }
 
 dependencies {
+    implementation(platform("io.ktor:ktor-bom:3.2.3"))
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-server-openapi")
     implementation("io.ktor:ktor-server-call-logging-jvm")
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
-    implementation("io.ktor:ktor-serialization-jackson-jvm")
     implementation("io.ktor:ktor-server-netty-jvm")
-    implementation("ch.qos.logback:logback-classic:$logback_version")
-
-    // jira client
-    implementation("com.atlassian.jira:jira-rest-java-client-core:$jira_client_version")
-    implementation("io.ktor:ktor-client-logging:3.2.3")
-    compileOnly("com.atlassian.fugue:fugue:$jira_client_fugue_version")
+    implementation("io.ktor:ktor-server-cors")
+    implementation("io.ktor:ktor-serialization-jackson-jvm")
 
     // ktor clent
     implementation(Dependencies.ktorClientCore)
     implementation(Dependencies.ktorClientCIO)
     implementation(Dependencies.ktorClientContent)
-    implementation("io.ktor:ktor-client-auth:2.3.7")
+    implementation("io.ktor:ktor-client-auth")
     implementation(Dependencies.ktorKotlinxSerialization)
     implementation(Dependencies.ktorKoin)
     implementation(Dependencies.ktorKoinSlf4j)
+
     implementation("org.json:json:20231013")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
-    implementation("io.ktor:ktor-client-logging:2.3.5")
+    implementation("io.ktor:ktor-client-logging")
+
+
+    // jira client
+    implementation("com.atlassian.jira:jira-rest-java-client-core:${jira_client_version}")
+    implementation("io.atlassian.fugue:fugue:${jira_client_fugue_version}")
+
+
 
     // serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.7.1")
@@ -66,12 +70,13 @@ dependencies {
     // https://github.com/lightbend/config
     implementation("io.github.config4k:config4k:0.7.0") // ConfigFactory
 
-    testImplementation("io.ktor:ktor-server-tests-jvm")
+    testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 
-    implementation("io.ktor:ktor-server-cors:$ktor_version")
+
 
     // logging
+    implementation("ch.qos.logback:logback-classic:${logback_version}")
     implementation("io.github.oshai:kotlin-logging-jvm:7.0.3")
     implementation("org.apache.logging.log4j:log4j-core:2.9.1")
 }

@@ -37,5 +37,5 @@ object Versions {
     const val prometheusVersion = "1.6.13"
     const val ktorVersion = "3.2.3"
     const val kotlinGrpc = "1.3.0"
-    const val koinVersion = "4.1.0"
+    const val koinVersion = "3.5.3"
 }

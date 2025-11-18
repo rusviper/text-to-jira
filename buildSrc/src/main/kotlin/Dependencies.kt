@@ -5,15 +5,11 @@ package ru.rusviper.gradle
  */
 object Dependencies {
 
-    // web-server
-    const val ktor = "io.ktor:ktor-server-core:${Versions.ktorVersion}"
-    const val kotlinGrpc = "io.grpc:grpc-kotlin-stub:${Versions.kotlinGrpc}"
-
     // web-client
-    const val ktorClientCore = "io.ktor:ktor-client-core:${Versions.ktorVersion}"
-    const val ktorClientCIO = "io.ktor:ktor-client-cio:${Versions.ktorVersion}"
-    const val ktorClientContent = "io.ktor:ktor-client-content-negotiation:${Versions.ktorVersion}"
-    const val ktorKotlinxSerialization = "io.ktor:ktor-serialization-kotlinx-json:${Versions.ktorVersion}"
+    const val ktorClientCore = "io.ktor:ktor-client-core"
+    const val ktorClientCIO = "io.ktor:ktor-client-cio"
+    const val ktorClientContent = "io.ktor:ktor-client-content-negotiation"
+    const val ktorKotlinxSerialization = "io.ktor:ktor-serialization-kotlinx-json"
 
     // di
     const val ktorKoin = "io.insert-koin:koin-ktor:${Versions.koinVersion}"
