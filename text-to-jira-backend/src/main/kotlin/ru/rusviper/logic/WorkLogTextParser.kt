@@ -14,7 +14,9 @@ import java.time.temporal.ChronoField
  * "1.7 - 11616: обсуждение по РК, план по передаче кода"
  * и преобразует в модель записи в лог
  */
-class WorkLogTextParser(val projectPrefix: String = "IA-") {
+class WorkLogTextParser(
+    val projectPrefix: String = "IA-",
+    val year: Int = LocalDate.now().year) {
 
     // строки могут быть следующих типов:
     // 1) дата (день) + комментарий к дню
@@ -65,7 +67,7 @@ class WorkLogTextParser(val projectPrefix: String = "IA-") {
         val stringValue = matcherDate.findAll(textRow).first().value
         val formatter = DateTimeFormatterBuilder()
             .appendPattern("d.MM")
-            .parseDefaulting(ChronoField.YEAR, LocalDate.now().year.toLong())
+            .parseDefaulting(ChronoField.YEAR, year.toLong())
             .toFormatter()
 
         val date = LocalDate.parse(stringValue, formatter)

@@ -12,7 +12,11 @@ data class AppRootConfig(
 )
 
 @Serializable
-data class JobConfig(val inputFile: String)
+data class JobConfig(
+    val inputFile: String,
+    val year: Int?,
+    val jiraProjectTag: String?
+)
 
 @Serializable
 data class JiraConfig(

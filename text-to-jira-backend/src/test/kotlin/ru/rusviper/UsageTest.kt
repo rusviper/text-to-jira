@@ -64,7 +64,7 @@ class UsageTest {
     }
 
     /** Ручной способ использования приложения **/
-    @Ignore
+    //@Ignore
     @Test
     fun testWriteRows() = testApplication {
 
@@ -80,10 +80,13 @@ class UsageTest {
         val fileString = Files.readString(Paths.get(path))
 
         // parse file
-        val parseDayWorkLogs = WorkLogTextParser().parseDayWorkLogs(fileString)
+        val parseDayWorkLogs = WorkLogTextParser(
+            projectPrefix = config.app.job.jiraProjectTag + "-",
+            year = 2025,
+        ).parseDayWorkLogs(fileString)
 
         // check parsing
-        assertEquals(120, parseDayWorkLogs.size)
+        assertEquals(20, parseDayWorkLogs.size)
 
         // publish to jira
         JiraClient(config.app.jira).apply {

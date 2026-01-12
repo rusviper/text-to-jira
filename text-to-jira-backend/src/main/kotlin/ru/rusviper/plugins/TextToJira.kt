@@ -86,10 +86,15 @@ fun pingJira(): GetJiraStatusResult {
 }
 
 fun parseLogText(text: String): List<WorkLogRow> {
-    return WorkLogTextParser().parseDayWorkLogs(text)
+    // todo исключить повторное чтение конфигурации
+    val appConfig = AppConfigReader.readConfig()
+    val projectPrefix = if (appConfig.app.job.jiraProjectTag == null) "IA-" else "${appConfig.app.job.jiraProjectTag}-"
+    val year: Int = appConfig.app.job.year ?: LocalDateTime.now().year
+    return WorkLogTextParser(projectPrefix, year).parseDayWorkLogs(text)
 }
 
 fun getIssueLogRecords(issue: String): WorkLogRecords {
+    // todo исключить повторное чтение конфигурации
     val appConfig = AppConfigReader.readConfig()
     val client = JiraClient(appConfig.app.jira)
     val logRecords = client.getIssueLogRecords(issue)
